@@ -4,6 +4,7 @@ const program = require('commander');
 const download = require('download-git-repo');
 const chalk = require('chalk');
 const ora = require('ora');
+const fs = require('fs');
 
 program
   .version('0.1.0')
@@ -27,6 +28,16 @@ if (program.init) {
       console.info('');
       console.info(chalk.green('-----------------------------------------------------'));
       console.info('');
+      fs.readFile(`${process.cwd()}/${program.init}/package.json`, (err, data) => {
+        if (err) throw err;
+        let _data = JSON.parse(data.toString())
+        _data.name = program.init
+        _data.version = '1.0.0'
+        let str = JSON.stringify(_data, null, 4);
+        fs.writeFile(`${process.cwd()}/${program.init}/package.json`, str, function (err) {
+          if (err) throw err;
+        })
+      });
     }else{
       spinner.warn(['发生错误，请在https://github.com/codexu，Issues留言'])
     }
