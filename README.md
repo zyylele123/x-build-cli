@@ -6,7 +6,7 @@
 
 <h1 align="center">x-build-cli</h1>
 
-`x-build-cli`安装到本地全局环境下，可以通过指令`x-build init [项目名]`快速初始化一个最新版本的`x-build`项目。
+命令行工具：`x-build-cli`，将此项安装到本地全局环境下，可以通过指令`x-build init [项目名]`快速初始化一个最新版本的`x-build`项目。
 
 ## 起步
 
