@@ -1,5 +1,2 @@
-bower_components/
-node_modules/
-server/node_modules/
-.sass-cache
-dist/
+node_modules
+.DS_Store

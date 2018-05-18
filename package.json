@@ -1,6 +1,6 @@
 {
   "name": "x-build-cli",
-  "version": "1.1.1",
+  "version": "1.1.7",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -12,9 +12,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codexu/x-build-cli.git"
+  },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.15.1",
     "download-git-repo": "^1.0.2",
