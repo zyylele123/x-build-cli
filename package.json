@@ -1,13 +1,14 @@
 {
   "name": "x-build-cli",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "",
   "main": "index.js",
   "directories": {
     "lib": "lib"
   },
   "bin": {
-    "x-build": "./bin/x-build.js"
+    "x-build": "./bin/x-build.js",
+    "x": "./bin/x-build.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,5 +24,6 @@
     "commander": "^2.15.1",
     "download-git-repo": "^1.0.2",
     "ora": "^2.1.0"
-  }
+  },
+  "devDependencies": {}
 }

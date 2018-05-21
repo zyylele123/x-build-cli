@@ -1,7 +1,7 @@
 <p align="center"><img width="160" src="https://github.com/codexu/x-build/blob/x-build4.1/src/assets/images/logo.png?raw=true" alt="x-build"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.7-blue.svg">
+  <img src="https://img.shields.io/badge/version-1.1.8-blue.svg">
 </p>
 
 <h1 align="center">x-build-cli</h1>
@@ -17,7 +17,7 @@
 
 ```
   /* 初始化x-build项目 */
-  x-build init [项目名]
+  x-build init [项目名] or x init [项目名]
 ```
 
 ## 参考文档
@@ -25,6 +25,8 @@
 x-build文档: [https://github.com/codexu/x-build](https://github.com/codexu/x-build)
 
 ## update
+
+`v1.1.8` `18.05.21` : 增加简洁命令`x`
 
 `v1.1.7` `18.05.18` : 将依赖安装后上传至npm
 

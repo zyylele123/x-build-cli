@@ -1,14 +1,17 @@
 #! /usr/bin/env node
 const path = require('path');
+const fs = require('fs');
+
 const program = require('commander');
 const download = require('download-git-repo');
 const chalk = require('chalk');
 const ora = require('ora');
-const fs = require('fs');
 
 program
   .version('0.1.0')
   .option('-i, init [name]', '初始化x-build项目')
+
+program
   .parse(process.argv);
 
 if (program.init) {
@@ -29,6 +32,8 @@ if (program.init) {
       console.info('');
       console.info(chalk.green('-----------------------------------------------------'));
       console.info('');
+      console.log();
+      
       fs.readFile(`${process.cwd()}/${program.init}/package.json`, (err, data) => {
         if (err) throw err;
         let _data = JSON.parse(data.toString())
