@@ -16,7 +16,7 @@ program
 
 if (program.init) {
   const spinner = ora('正在从github下载x-build').start();
-  download('codexu/x-build#x-build4.1', program.init, function (err) {
+  download('codexu/x-build', program.init, function (err) {
     if(!err){
       spinner.clear()
       console.info('');
