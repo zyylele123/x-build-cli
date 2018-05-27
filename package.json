@@ -1,6 +1,6 @@
 {
   "name": "x-build-cli",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -21,6 +21,8 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.1",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
     "commander": "^2.15.1",
     "download-git-repo": "^1.0.2",
     "ora": "^2.1.0"
