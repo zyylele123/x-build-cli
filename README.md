@@ -8,6 +8,10 @@
 
 命令行工具：`x-build-cli`，将此项安装到本地全局环境下，可以通过指令`x-build init`快速初始化一个最新版本的`x-build`项目。
 
+<p align="center">
+  <img width="580" src="https://github.com/codexu/_images/blob/master/x-bulid/x-build-cli.gif?raw=true">
+</p>
+
 ## 起步
 
 ```
