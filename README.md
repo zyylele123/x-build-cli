@@ -1,7 +1,7 @@
 <p align="center"><img width="160" src="https://github.com/codexu/x-build/blob/x-build4.1/src/assets/images/logo.png?raw=true" alt="x-build"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.10-blue.svg">
+  <img src="https://img.shields.io/badge/version-1.1.11-blue.svg">
 </p>
 
 <h1 align="center">x-build-cli</h1>
@@ -26,6 +26,8 @@
 x-build文档: [https://github.com/codexu/x-build](https://github.com/codexu/x-build)
 
 ## update
+
+`v1.1.11` `18.05.28` : 使用inquirer替换co，现在拥有更美观的输入环境。
 
 `v1.1.10` `18.05.27` : 优化输入方式,目前可以填写项目名\版本号\端口号选项
 
