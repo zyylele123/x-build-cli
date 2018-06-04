@@ -37,12 +37,28 @@ const portQuestion = {
   default: '3000'
 };
 
+const templateQuestion = {
+  type: 'confirm',
+  message: `使用pug(jade)模版引擎? `,
+  name: 'template',
+  default: true
+};
+
+const remQuestion = {
+  type: 'confirm',
+  message: `使用px2rem布局? `,
+  name: 'rem',
+  default: true
+};
+
 if (program.init) {
   console.info('');
   inquirer.prompt([
     nameQuestion,
     versionQuestion,
     portQuestion,
+    templateQuestion,
+    remQuestion
   ]).then(function (answers) {
     const spinner = ora('正在从github下载x-build').start();
     download('codexu/x-build', answers.name, function (err) {
@@ -64,12 +80,20 @@ if (program.init) {
         console.info(chalk.green('-----------------------------------------------------'));
         console.info('');
 
+        if (answers.template === true) {
+          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/index.html`);
+        } else {
+          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/index.pug`);
+        }
+
         fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => {
           if (err) throw err;
           let _data = JSON.parse(data.toString())
           _data.name = answers.name
           _data.version = answers.version
           _data.port = answers.port
+          _data.template = answers.template ? "pug" : "html"
+          _data.rem = answers.rem
           let str = JSON.stringify(_data, null, 4);
           fs.writeFile(`${process.cwd()}/${answers.name}/package.json`, str, function (err) {
             if (err) throw err;

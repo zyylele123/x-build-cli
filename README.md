@@ -1,7 +1,7 @@
 <p align="center"><img width="160" src="https://github.com/codexu/x-build/blob/x-build4.1/src/assets/images/logo.png?raw=true" alt="x-build"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.11-blue.svg">
+  <img src="https://img.shields.io/badge/version-1.2.0-blue.svg">
 </p>
 
 <h1 align="center">x-build-cli</h1>
@@ -22,7 +22,11 @@
 ```
   /* 初始化x-build项目 (简写为: x i) */
   x-build init
-  // 输入项目名\版本号\端口号
+  // 输入项目名称
+  // 输入初始版本
+  // 输入server端口
+  // 使用pug(jade)模版引擎？(Y/N)
+  // 使用px2rem布局?(Y/N)
 ```
 
 ## 参考文档
@@ -30,6 +34,8 @@
 x-build文档: [https://github.com/codexu/x-build](https://github.com/codexu/x-build)
 
 ## update
+
+`v1.2.0` `18.06.04` : 增加是否使用pug模版引擎、是否使用rem布局选项。
 
 `v1.1.11` `18.05.28` : 使用inquirer替换co，现在拥有更美观的输入环境。
 
