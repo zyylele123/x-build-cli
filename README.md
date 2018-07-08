@@ -35,6 +35,8 @@ x-build文档: [https://github.com/codexu/x-build](https://github.com/codexu/x-b
 
 ## update
 
+`v1.2.1` `18.07.08` : 默认端口改为'8080'
+
 `v1.2.0` `18.06.04` : 增加是否使用pug模版引擎、是否使用rem布局选项。
 
 `v1.1.11` `18.05.28` : 使用inquirer替换co，现在拥有更美观的输入环境。

@@ -34,7 +34,7 @@ const portQuestion = {
   type: 'input',
   message: `server端口: `,
   name: 'port',
-  default: '3000'
+  default: '8080'
 };
 
 const templateQuestion = {
