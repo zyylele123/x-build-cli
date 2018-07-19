@@ -83,7 +83,8 @@ if (program.init) {
         if (answers.template === true) {
           fs.unlinkSync(`${process.cwd()}/${answers.name}/src/index.html`);
         } else {
-          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/index.pug`);
+          fs.unlinkSync(`${process.cwd()}/${answers.name}/index.pug`);
+          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/app.pug`);
         }
 
         fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => {
