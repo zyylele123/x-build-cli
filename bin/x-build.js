@@ -9,6 +9,23 @@ const download = require('download-git-repo');
 const chalk = require('chalk');
 const ora = require('ora');
 
+// 删除文件夹
+function deleteFolder(path) {
+  var files = [];
+  if (fs.existsSync(path)) {
+    files = fs.readdirSync(path);
+    files.forEach(function (file, index) {
+      var curPath = path + "/" + file;
+      if (fs.statSync(curPath).isDirectory()) { // recurse
+        deleteFolder(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+}
+
 program
   .version('0.1.0')
   .option('i, init', '初始化x-build项目')
@@ -86,7 +103,9 @@ if (program.init) {
           fs.unlinkSync(`${process.cwd()}/${answers.name}/index.pug`);
           fs.unlinkSync(`${process.cwd()}/${answers.name}/src/app.pug`);
         }
-
+        deleteFolder(`${process.cwd()}/${answers.name}/docs/`);
+        deleteFolder(`${process.cwd()}/${answers.name}/_book/`);
+        fs.unlinkSync(`${process.cwd()}/${answers.name}/SUMMARY.md`);
         fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => {
           if (err) throw err;
           let _data = JSON.parse(data.toString())

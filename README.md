@@ -1,7 +1,7 @@
 <p align="center"><img width="160" src="https://github.com/codexu/x-build/blob/x-build4.1/src/assets/images/logo.png?raw=true" alt="x-build"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-blue.svg">
+  <img src="https://img.shields.io/badge/version-1.2.3-blue.svg">
 </p>
 
 <h1 align="center">x-build-cli</h1>
