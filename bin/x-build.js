@@ -90,7 +90,6 @@ if (program.init) {
         console.info('');
 
         deleteFolder(`${process.cwd()}/${answers.name}/docs/`);
-        deleteFolder(`${process.cwd()}/${answers.name}/_book/`);
         fs.unlinkSync(`${process.cwd()}/${answers.name}/SUMMARY.md`);
         fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => {
           if (err) throw err;
