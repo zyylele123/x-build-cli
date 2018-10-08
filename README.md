@@ -1,7 +1,7 @@
 <p align="center"><img width="160" src="https://github.com/codexu/x-build/blob/x-build4.1/src/assets/images/logo.png?raw=true" alt="x-build"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.3-blue.svg">
+  <img src="https://img.shields.io/badge/version-1.2.4-blue.svg">
 </p>
 
 <h1 align="center">x-build-cli</h1>
@@ -34,6 +34,8 @@
 x-build文档: [https://github.com/codexu/x-build](https://github.com/codexu/x-build)
 
 ## update
+
+`v1.2.4` `18.10.08` : 不再支持html，请使用pug模板引擎。
 
 `v1.2.1` `18.07.08` : 默认端口改为'8080'
 

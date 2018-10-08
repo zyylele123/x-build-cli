@@ -54,13 +54,6 @@ const portQuestion = {
   default: '8080'
 };
 
-const templateQuestion = {
-  type: 'confirm',
-  message: `使用pug(jade)模版引擎? `,
-  name: 'template',
-  default: true
-};
-
 const remQuestion = {
   type: 'confirm',
   message: `使用px2rem布局? `,
@@ -74,7 +67,6 @@ if (program.init) {
     nameQuestion,
     versionQuestion,
     portQuestion,
-    templateQuestion,
     remQuestion
   ]).then(function (answers) {
     const spinner = ora('正在从github下载x-build').start();
@@ -97,12 +89,6 @@ if (program.init) {
         console.info(chalk.green('-----------------------------------------------------'));
         console.info('');
 
-        if (answers.template === true) {
-          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/index.html`);
-        } else {
-          fs.unlinkSync(`${process.cwd()}/${answers.name}/index.pug`);
-          fs.unlinkSync(`${process.cwd()}/${answers.name}/src/app.pug`);
-        }
         deleteFolder(`${process.cwd()}/${answers.name}/docs/`);
         deleteFolder(`${process.cwd()}/${answers.name}/_book/`);
         fs.unlinkSync(`${process.cwd()}/${answers.name}/SUMMARY.md`);
