@@ -3,101 +3,50 @@
 const path = require('path');
 const fs = require('fs');
 
-const program = require('commander');
+const commander = require('commander');
 const inquirer = require('inquirer')
 const download = require('download-git-repo');
-const chalk = require('chalk');
+// const chalk = require('chalk');
 const ora = require('ora');
 
-// 删除文件夹
-function deleteFolder(path) {
-  var files = [];
-  if (fs.existsSync(path)) {
-    files = fs.readdirSync(path);
-    files.forEach(function (file, index) {
-      var curPath = path + "/" + file;
-      if (fs.statSync(curPath).isDirectory()) { // recurse
-        deleteFolder(curPath);
-      } else { // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    fs.rmdirSync(path);
-  }
-}
+// const deleteFolder = require('./deleteFolder.js');
+const package = require('../package.json');
+const question = require('./question.js');
+const hint = require('./hint.js');
 
-program
-  .version('0.1.0')
-  .option('i, init', '初始化x-build项目')
+commander
+  .version(package.version)
+  .option('-i, init', '初始化x-build项目')
 
-program
+commander
   .parse(process.argv);
 
-const nameQuestion = {
-  type: 'input',
-  message: `项目名称: `,
-  name: 'name',
-  default: 'x-build'
-};
-
-const versionQuestion = {
-  type: 'input',
-  message: `初始版本: `,
-  name: 'version',
-  default: '0.0.1'
-};
-
-const portQuestion = {
-  type: 'input',
-  message: `server端口: `,
-  name: 'port',
-  default: '8080'
-};
-
-const remQuestion = {
-  type: 'confirm',
-  message: `使用px2rem布局? `,
-  name: 'rem',
-  default: true
-};
-
-if (program.init) {
+if (commander.init) {
   console.info('');
   inquirer.prompt([
-    nameQuestion,
-    versionQuestion,
-    portQuestion,
-    remQuestion
+    question.name,
+    question.version,
+    question.port,
+    question.rem
   ]).then(function (answers) {
-    const spinner = ora('正在从github下载x-build').start();
+    hint.line()
+    const spinner = ora('Downloading from GitHub').start();
     download('codexu/x-build', answers.name, function (err) {
       if (!err) {
         spinner.clear()
-        console.info('');
-        console.info(chalk.green('-----------------------------------------------------'));
-        console.info('');
-        spinner.succeed(['项目创建成功,请继续进行以下操作:'])
-        console.info('');
-        console.info(chalk.cyan(` -  cd ${answers.name}`));
-        console.info(chalk.cyan(` -  npm install / yarn`));
-        console.info(chalk.cyan(` -  npm start / npm run dev`));
-        console.info('');
-        console.info(chalk.gray(`devServer: http://localhost:${answers.port}`));
-        console.info('');
-        console.info(chalk.gray('参考文档: https://github.com/codexu/x-build'));
-        console.info('');
-        console.info(chalk.green('-----------------------------------------------------'));
-        console.info('');
-
-        deleteFolder(`${process.cwd()}/${answers.name}/docs/`);
-        fs.unlinkSync(`${process.cwd()}/${answers.name}/SUMMARY.md`);
-        fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => {
+        spinner.succeed(['项目初始化完成，请继续进行以下操作:'])
+        hint.print('cyan', ` $ cd ${answers.name}`, 'top')
+        hint.print('cyan', ` $ yarn / npm install`)
+        hint.print('cyan', ` $ npm run dev`, 'bottom')
+        hint.print('greenBright', `Server: http://localhost:${answers.port}`)
+        hint.print('greenBright', `Docs: https://codexu.github.io/`)
+        hint.line()
+        fs.readFile(`${process.cwd()}/${answers.name}/package.json`, (err, data) => { 
           if (err) throw err;
           let _data = JSON.parse(data.toString())
           _data.name = answers.name
           _data.version = answers.version
           _data.port = answers.port
-          _data.template = answers.template ? "pug" : "html"
           _data.rem = answers.rem
           let str = JSON.stringify(_data, null, 4);
           fs.writeFile(`${process.cwd()}/${answers.name}/package.json`, str, function (err) {
@@ -106,7 +55,7 @@ if (program.init) {
           })
         });
       } else {
-        spinner.warn(['发生错误，请在https://github.com/codexu，Issues留言'])
+        spinner.warn(['warning！ 请在 https://github.com/codexu/x-build 留言'])
         process.exit()
       }
     })
