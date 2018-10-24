@@ -20,19 +20,19 @@ const question = {
   },
   rem: {
     type: 'confirm',
-    message: `是否使用px2rem布局?`,
+    message: `移动端开发?`,
     name: 'rem',
     default: true
   },
   package_manager: {
     type: 'list',
-    message: `包管理器: `,
+    message: `选择包管理器: `,
     name: 'package_manager',
     choices: ['yarn', 'npm', 'cnpm']
   },
   plugin: {
     type: 'checkbox',
-    message: `插件: `,
+    message: `选择安装插件: `,
     name: 'plugin',
     choices: [
       {
