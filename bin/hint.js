@@ -1,12 +1,12 @@
 const chalk = require('chalk');
 
 const hint = {
-  line: function() {
+  line: () => {
     console.info();
-    console.info(chalk.gray('--------------------------------------------------'));
+    console.info(chalk.gray('---------------------------------------'));
     console.info();
   },
-  print: function(chalk_string, text, br) {
+  print: (chalk_string, text, br) => {
     if(br === 'top') {
       console.info();
     }
@@ -14,6 +14,20 @@ const hint = {
     if(br === 'bottom') {
       console.info();
     }
+  },
+  docs: () => {
+    console.info(chalk.green(' [开发文档] https://codexu.github.io/'));
+  },
+  issues: () => {
+    console.info(chalk.green('[问题留言] https://github.com/codexu/x-build/issues'));
+  },
+  fail: (spinner, str, err) => {
+    spinner.fail([chalk.bgRed(str)])
+    console.info('')
+    console.error(err)
+    console.info('')
+    console.info(chalk.blue('[问题留言] https://github.com/codexu/x-build/issues'));
+    process.exit()
   }
 }
 
