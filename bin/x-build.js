@@ -74,6 +74,7 @@ let promist = new Promise(function (resolve, reject) {
         }
         let _data = JSON.parse(data.toString())
         _data.name = answers_all.name
+        _data.version = '0.0.0'
         _data.port = answers_all.port
         _data.rem = answers_all.rem
         let str = JSON.stringify(_data, null, 4);
