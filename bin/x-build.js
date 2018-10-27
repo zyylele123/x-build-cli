@@ -29,7 +29,10 @@ commander
 let promist = new Promise(function (resolve, reject) {
     // commander init ( x-build init )
     // 清理屏幕
-    process.stdout.write(process.platform === 'win32' ? '\x1Bc' : '\x1B[2J\x1B[3J\x1B[H')
+    process.stdout.write('\n');
+    process.stdout.write('\033[0f');
+    process.stdout.write('\033[2J');
+    // process.stdout.write(process.platform === 'win32' ? '\x1Bc' : '\x1B[2J\x1B[3J\x1B[H');
     hint.print('magenta', `✨  X-BUILD-CLI v${package.version}`)
     if (commander.init) {
       console.info('');
