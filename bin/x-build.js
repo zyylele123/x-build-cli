@@ -13,7 +13,8 @@ const cmd = require('node-cmd');
 const package = require('../package.json');
 const question = require('../lib/question.js');
 const hint = require('../lib/hint.js');
-const clearConsole = require('../lib/clearConsole.js');
+const clearConsole = require('../lib/clearConsole');
+const checkVersion = require('../lib/checkVersion');
 
 const spinner = ora();
 
@@ -25,28 +26,41 @@ commander
 
 commander
   .parse(process.argv);
-
+  
 new Promise(function (resolve, reject) {
     // 清空控制台，并输出版本信息
-    clearConsole('magenta', `✨  X-BUILD-CLI v${package.version}`)
-    // commander init ( x-build init )
-    if (commander.init) {
-      console.info('');
-      inquirer.prompt([
-        question.name,
-        question.port,
-        question.rem,
-        question.package_manager,
-        question.plugin
-      ]).then(function (answers) {
-        answers_all.name = answers.name
-        answers_all.port = answers.port
-        answers_all.rem = answers.rem
-        answers_all.package_manager = answers.package_manager
-        answers_all.plugin = answers.plugin
-        resolve();
-      });
-    }
+    clearConsole('magenta', `X-BUILD-CLI v${package.version}`)
+    console.info('');
+    // 检测是否为最新版本
+    spinner.start('正在查询x-build-cli最新版本');
+    checkVersion().then(() => {
+      spinner.stop();
+      resolve()
+    }, (version) => {
+      hint.fail(spinner, `请将x-build-cli更新到最新版本(v${version})`)
+      process.exit();
+    })
+  })
+  // commander init ( x-build init )
+  .then(function () {
+    return new Promise(resolve => {
+      if (commander.init) {
+        inquirer.prompt([
+          question.name,
+          question.port,
+          question.rem,
+          question.package_manager,
+          question.plugin
+        ]).then(function (answers) {
+          answers_all.name = answers.name
+          answers_all.port = answers.port
+          answers_all.rem = answers.rem
+          answers_all.package_manager = answers.package_manager
+          answers_all.plugin = answers.plugin
+          resolve();
+        });
+      }
+    })
   })
   // 通过download-git-repo下载x-build
   .then(function () {
