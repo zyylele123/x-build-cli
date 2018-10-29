@@ -10,10 +10,10 @@ const chalk = require('chalk');
 const ora = require('ora');
 const cmd = require('node-cmd');
 
-// const deleteFolder = require('./deleteFolder.js');
 const package = require('../package.json');
-const question = require('./question.js');
-const hint = require('./hint.js');
+const question = require('../lib/question.js');
+const hint = require('../lib/hint.js');
+const clearConsole = require('../lib/clearConsole.js');
 
 const spinner = ora();
 
@@ -26,11 +26,10 @@ commander
 commander
   .parse(process.argv);
 
-let promist = new Promise(function (resolve, reject) {
+new Promise(function (resolve, reject) {
+    // 清空控制台，并输出版本信息
+    clearConsole('magenta', `✨  X-BUILD-CLI v${package.version}`)
     // commander init ( x-build init )
-    // 清理屏幕
-    process.stdout.write(process.platform === 'win32' ? '\n\033[0f\033[2J' : '\x1B[2J\x1B[3J\x1B[H');
-    hint.print('magenta', `✨  X-BUILD-CLI v${package.version}`)
     if (commander.init) {
       console.info('');
       inquirer.prompt([
@@ -63,7 +62,6 @@ let promist = new Promise(function (resolve, reject) {
       })
     })
   })
-
   // 修改package.json
   .then(function () {
     return new Promise((resolve, reject) => {
