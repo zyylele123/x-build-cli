@@ -1,4 +1,4 @@
-# 什么是x-build-cli
+# x-build-cli
 
 `x-build-cli`是一个快速生成x-build项目的生成器，类似于vue-cli。
 
