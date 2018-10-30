@@ -8,9 +8,9 @@
 
 ## 简介
 
-`x-build-cli`是一个快速生成`x-build`项目的生成器，类似于vue-cli。将 `x-build-cli` npm包安装在全局环境下，提供了终端里的 `x-build` or `x` 命令。
+x-build-cli是一个快速生成x-build项目的生成器，类似于vue-cli。将x-build-cli安装在全局环境下，提供了终端里的 `x-build` or `x` 命令。
 
-您可以通过 >> [https://codexu.github.io/](https://codexu.github.io/) << 获取详细文档。
+您可以通过 >> [https://codexu.github.io/](https://codexu.github.io/) << 获取详细文档。
 
 ## 安装
 
