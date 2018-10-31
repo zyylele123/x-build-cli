@@ -105,30 +105,31 @@ new Promise(function (resolve, reject) {
   })
   // 安装项目依赖
   .then(function () {
-    // 根据不同的选项选择安装方式
-    let type_install = null;
-    switch (answers_all.package_manager) {
-      case 'npm':
-        type_install = 'npm install'
-        break;
-      case 'cnpm':
-        type_install = 'cnpm install'
-        break;
-      default:
-        type_install = 'yarn'
-        break;
-    }
-    spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装项目依赖...`])
     return new Promise((resolve, reject) => {
+      // 根据不同的选项选择安装方式
+      let type_install = '';
+      switch (answers_all.package_manager) {
+        case 'npm':
+          type_install = 'npm install'
+          break;
+        case 'cnpm':
+          type_install = 'cnpm install'
+          break;
+        default:
+          type_install = 'yarn'
+          break;
+      }
+      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装项目依赖...`])
       cmd.get(
-        `
-      cd ${answers_all.name}
-      ${type_install}
-    `,
+        `cd ${answers_all.name} & ${type_install}`,
         function (err, data, stderr) {
-          spinner.succeed(['项目依赖安装完成.'])
-          spinner.clear()
-          resolve()
+          if (!err) {
+            spinner.succeed(['项目依赖安装完成.'])
+            spinner.clear()
+            resolve()
+          } else {
+            throw new Error(err)
+          }
         }
       );
     })
@@ -155,10 +156,7 @@ new Promise(function (resolve, reject) {
     }
     return new Promise((resolve, reject) => {
       cmd.get(
-        `
-        cd ${answers_all.name}
-        ${type_install}
-      `,
+        `cd ${answers_all.name} & ${type_install}`,
         function () {
           spinner.succeed([`插件安装完成.`])
           spinner.clear()
