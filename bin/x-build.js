@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const path = require('path');
 const fs = require('fs');
 
 const commander = require('commander');
@@ -16,7 +15,7 @@ const clearConsole = require('../lib/clearConsole');
 const checkVersion = require('../lib/checkVersion');
 const cmdSystem = require('../lib/cmdSystem');
 
-const spinner = ora();
+const spinner = new ora();
 
 let answers_all = new Object();
 
@@ -106,7 +105,8 @@ new Promise(function (resolve, reject) {
   // 安装项目依赖
   .then(function () {
     return new Promise((resolve, reject) => {
-      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`])
+      let installStr = `正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`
+      spinner.start([installStr])
       // 根据不同的选项选择安装方式
       let type_install = '';
       switch (answers_all.package_manager) {
@@ -120,7 +120,7 @@ new Promise(function (resolve, reject) {
           type_install = 'yarn'
           break;
       }
-      cmdSystem([`cd ${answers_all.name}`, type_install])
+      cmdSystem([`cd ${answers_all.name}`, type_install], spinner, installStr)
         .then(() => {
           spinner.succeed(['项目依赖安装完成.'])
           spinner.clear()
@@ -131,7 +131,8 @@ new Promise(function (resolve, reject) {
   // 安装插件
   .then(function () {
     return new Promise(resolve => {
-      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`])
+      let installStr = `正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`
+      spinner.start([installStr])
       if (answers_all.rem === true) {
         answers_all.plugin.push('hotcss')
       }
@@ -148,7 +149,7 @@ new Promise(function (resolve, reject) {
           type_install = `yarn add ${plugin}`
           break;
       }
-      cmdSystem([`cd ${answers_all.name}`, type_install])
+      cmdSystem([`cd ${answers_all.name}`, type_install], spinner, installStr)
         .then(() => {
           spinner.succeed(['插件安装完成.'])
           spinner.clear()
@@ -159,6 +160,7 @@ new Promise(function (resolve, reject) {
   // 最后一步提示信息
   .then(function () {
     setTimeout(function () {
+      hint.line()
       hint.print('green', `🎉  欢迎使用x-build,请继续完成以下操作:`, 'bottom')
       hint.print('cyan', ` $ cd ${answers_all.name}`)
       hint.print('cyan', ` $ npm run dev`, 'bottom')
