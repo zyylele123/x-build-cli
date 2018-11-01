@@ -8,13 +8,13 @@ const inquirer = require('inquirer')
 const download = require('download-git-repo');
 const chalk = require('chalk');
 const ora = require('ora');
-const cmd = require('node-cmd');
 
 const package = require('../package.json');
 const question = require('../lib/question.js');
 const hint = require('../lib/hint.js');
 const clearConsole = require('../lib/clearConsole');
 const checkVersion = require('../lib/checkVersion');
+const cmdSystem = require('../lib/cmdSystem');
 
 const spinner = ora();
 
@@ -26,7 +26,7 @@ commander
 
 commander
   .parse(process.argv);
-  
+
 new Promise(function (resolve, reject) {
     // 清空控制台，并输出版本信息
     clearConsole('magenta', `X-BUILD-CLI v${package.version}`)
@@ -106,6 +106,7 @@ new Promise(function (resolve, reject) {
   // 安装项目依赖
   .then(function () {
     return new Promise((resolve, reject) => {
+      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`])
       // 根据不同的选项选择安装方式
       let type_install = '';
       switch (answers_all.package_manager) {
@@ -119,55 +120,40 @@ new Promise(function (resolve, reject) {
           type_install = 'yarn'
           break;
       }
-      cmd.get(
-        `
-          cd ${answers_all.name}
-          ${type_install}
-        `,
-        function (err, data, stderr) {
-          if (!err) {
-            spinner.succeed(['项目依赖安装完成.'])
-            spinner.clear()
-            resolve()
-          } else {
-            throw new Error(err)
-          }
-        }
-      );
+      cmdSystem([`cd ${answers_all.name}`, type_install])
+        .then(() => {
+          spinner.succeed(['项目依赖安装完成.'])
+          spinner.clear()
+          resolve()
+        })
     })
   })
   // 安装插件
   .then(function () {
-    spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`])
-    if (answers_all.rem === true) {
-      answers_all.plugin.push('hotcss')
-    }
-    let plugin = answers_all.plugin.join(' ')
-    let type_install = null;
-    switch (answers_all.package_manager) {
-      case 'npm':
-        type_install = `npm install ${plugin} --save`
-        break;
-      case 'cnpm':
-        type_install = `cnpm install ${plugin} --save`
-        break;
-      default:
-        type_install = `yarn add ${plugin}`
-        break;
-    }
     return new Promise(resolve => {
-      cmd.get(
-        `
-          cd ${answers_all.name}
-          ${type_install}
-        `,
-        function () {
-          spinner.succeed([`插件安装完成.`])
+      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`])
+      if (answers_all.rem === true) {
+        answers_all.plugin.push('hotcss')
+      }
+      let plugin = answers_all.plugin.join(' ')
+      let type_install = null;
+      switch (answers_all.package_manager) {
+        case 'npm':
+          type_install = `npm install ${plugin} --save`
+          break;
+        case 'cnpm':
+          type_install = `cnpm install ${plugin} --save`
+          break;
+        default:
+          type_install = `yarn add ${plugin}`
+          break;
+      }
+      cmdSystem([`cd ${answers_all.name}`, type_install])
+        .then(() => {
+          spinner.succeed(['插件安装完成.'])
           spinner.clear()
-          hint.line()
           resolve()
-        }
-      )
+        })
     })
   })
   // 最后一步提示信息
