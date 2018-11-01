@@ -119,9 +119,11 @@ new Promise(function (resolve, reject) {
           type_install = 'yarn'
           break;
       }
-      spinner.start([`正在使用${chalk.greenBright(answers_all.package_manager)}安装项目依赖...`])
       cmd.get(
-        `cd ${answers_all.name} & ${type_install}`,
+        `
+          cd ${answers_all.name}
+          ${type_install}
+        `,
         function (err, data, stderr) {
           if (!err) {
             spinner.succeed(['项目依赖安装完成.'])
@@ -141,7 +143,6 @@ new Promise(function (resolve, reject) {
       answers_all.plugin.push('hotcss')
     }
     let plugin = answers_all.plugin.join(' ')
-
     let type_install = null;
     switch (answers_all.package_manager) {
       case 'npm':
@@ -154,9 +155,12 @@ new Promise(function (resolve, reject) {
         type_install = `yarn add ${plugin}`
         break;
     }
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       cmd.get(
-        `cd ${answers_all.name} & ${type_install}`,
+        `
+          cd ${answers_all.name}
+          ${type_install}
+        `,
         function () {
           spinner.succeed([`插件安装完成.`])
           spinner.clear()
