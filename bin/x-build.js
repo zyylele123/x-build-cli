@@ -21,7 +21,8 @@ let answers_all = new Object();
 
 commander
   .version(package.version)
-  .option('-i, init', '初始化x-build项目')
+  .option('-c, create <n>', '初始化x-build项目')
+
 
 commander
   .parse(process.argv);
@@ -43,21 +44,25 @@ new Promise(function (resolve, reject) {
   // commander init ( x-build init )
   .then(function () {
     return new Promise(resolve => {
-      if (commander.init) {
+      if (commander.create) {
         inquirer.prompt([
-          question.name,
           question.port,
           question.rem,
           question.package_manager,
           question.plugin
         ]).then(function (answers) {
-          answers_all.name = answers.name
+          answers_all.name = commander.create
           answers_all.port = answers.port
           answers_all.rem = answers.rem
           answers_all.package_manager = answers.package_manager
           answers_all.plugin = answers.plugin
           resolve();
         });
+      } else {
+        hint.print('gray', `参数列表:`)
+        hint.print('gray', `$ x-build create [name]`, 'bottom')
+        hint.fail(spinner, `请检查指令参数是否正确！`)
+        process.exit();
       }
     })
   })
@@ -163,7 +168,7 @@ new Promise(function (resolve, reject) {
       hint.line()
       hint.print('green', `🎉  欢迎使用x-build,请继续完成以下操作:`, 'bottom')
       hint.print('cyan', ` $ cd ${answers_all.name}`)
-      hint.print('cyan', ` $ npm run dev`, 'bottom')
+      hint.print('cyan', ` $ ${answers_all.package_manager === 'yarn' ? 'yarn' : 'npm run'} serve`, 'bottom')
       hint.print('green', ` [使用手册] https://codexu.github.io/`)
       process.exit()
     }, 500)
