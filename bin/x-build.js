@@ -22,7 +22,7 @@ let answers_all = new Object();
 commander
   .version(package.version)
   .option('-c, create <n>', '初始化x-build项目')
-
+  .option('-n', '禁止版本检测，可能会导致项目无法正常运行！')
 
 commander
   .parse(process.argv);
@@ -32,14 +32,18 @@ new Promise(function (resolve, reject) {
     clearConsole('magenta', `X-BUILD-CLI v${package.version}`)
     console.info('');
     // 检测是否为最新版本
-    spinner.start('正在查询x-build-cli最新版本');
-    checkVersion().then(() => {
-      spinner.stop();
+    if(commander.noversion){
       resolve()
-    }, (version) => {
-      hint.fail(spinner, `请将x-build-cli更新到最新版本(v${version})`)
-      process.exit();
-    })
+    } else {
+      spinner.start('正在查询x-build-cli最新版本');
+      checkVersion().then(() => {
+        spinner.stop();
+        resolve()
+      }, (version) => {
+        hint.fail(spinner, `请将x-build-cli更新到最新版本(v${version})`)
+        process.exit();
+      })
+    }
   })
   // commander init ( x-build init )
   .then(function () {
