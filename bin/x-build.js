@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 
 const commander = require('commander');
 const inquirer = require('inquirer')
@@ -14,6 +13,7 @@ const hint = require('../lib/hint.js');
 const clearConsole = require('../lib/clearConsole');
 const checkVersion = require('../lib/checkVersion');
 const cmdSystem = require('../lib/cmdSystem');
+const writeJSON = require('../lib/writeJSON');
 
 const spinner = new ora();
 
@@ -60,6 +60,12 @@ new Promise(function (resolve, reject) {
           answers_all.rem = answers.rem
           answers_all.package_manager = answers.package_manager
           answers_all.plugin = answers.plugin
+          if (answers_all.rem === true) {
+            answers_all.plugin.push('hotcss')
+          }
+          if (answers_all.plugin.indexOf('x-animate')) {
+            answers_all.plugin.push('animate.css')
+          }
           resolve();
         });
       } else {
@@ -84,31 +90,12 @@ new Promise(function (resolve, reject) {
       })
     })
   })
-  // 修改package.json
+  // 修改JSON
   .then(function () {
     return new Promise((resolve, reject) => {
-      // 读取package.json
-      fs.readFile(`${process.cwd()}/${answers_all.name}/package.json`, (err, data) => {
-        if (err) {
-          hint.fail(spinner, `package.json读取失败！`, err)
-        }
-        let _data = JSON.parse(data.toString())
-        _data.name = answers_all.name
-        _data.version = '0.0.0'
-        _data.port = answers_all.port
-        _data.rem = answers_all.rem
-        let str = JSON.stringify(_data, null, 4);
-        // 写入
-        fs.writeFile(`${process.cwd()}/${answers_all.name}/package.json`, str, function (err) {
-          if (!err) {
-            spinner.succeed(['模板文件下载完成.']);
-            spinner.clear();
-            resolve();
-          } else {
-            hint.fail(spinner, `package.json写入失败！`, err)
-          }
-        })
-      });
+      writeJSON(`${process.cwd()}/${answers_all.name}`, answers_all, spinner).then(() => {
+        resolve();
+      })
     })
   })
   // 安装项目依赖
@@ -142,9 +129,6 @@ new Promise(function (resolve, reject) {
     return new Promise(resolve => {
       let installStr = `正在使用${chalk.greenBright(answers_all.package_manager)}安装插件...`
       spinner.start([installStr])
-      if (answers_all.rem === true) {
-        answers_all.plugin.push('hotcss')
-      }
       let plugin = answers_all.plugin.join(' ')
       let type_install = null;
       switch (answers_all.package_manager) {
