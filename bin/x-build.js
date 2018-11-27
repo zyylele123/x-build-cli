@@ -70,7 +70,9 @@ function questionList() {
         if (config.answers_all.rem === true) {
           config.answers_all.plugin.push('hotcss')
         }
-        if (config.answers_all.plugin.indexOf('x-animate')) {
+        if (config.answers_all.plugin.indexOf('x-animate') ||
+            config.answers_all.plugin.indexOf('x-fullpage') 
+        ) {
           config.answers_all.plugin.push('animate.css')
         }
         resolve();
