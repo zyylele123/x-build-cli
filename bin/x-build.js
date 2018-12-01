@@ -5,6 +5,7 @@ const inquirer = require('inquirer')
 const download = require('download-git-repo');
 const chalk = require('chalk');
 const ora = require('ora');
+const fs = require('fs');
 
 const package = require('../package.json');
 const question = require('../lib/question.js');
@@ -60,12 +61,14 @@ function questionList() {
         question.port,
         question.rem,
         question.package_manager,
+        question.precss,
         question.plugin
       ]).then(function (answers) {
         config.answers_all.name = config.commander.create
         config.answers_all.port = answers.port
         config.answers_all.rem = answers.rem
         config.answers_all.package_manager = answers.package_manager
+        config.answers_all.precss = answers.precss
         config.answers_all.plugin = answers.plugin
         if (config.answers_all.rem === true) {
           config.answers_all.plugin.push('hotcss')
@@ -93,6 +96,8 @@ function downloadTemp() {
     config.spinner.start('正在下载最新模板文件...');
     download('codexu/x-build', config.answers_all.name, function (err) {
       if (!err) {
+        config.spinner.succeed(['模板文件下载完成.']);
+        config.spinner.clear();
         resolve()
       } else {
         hint.fail(config.spinner, '模板下载失败！请检查网络链接状况', err)
@@ -129,12 +134,64 @@ function installDev () {
         type_install = 'yarn'
         break;
     }
-    cmdSystem([`cd ${config.answers_all.name}`, type_install], config.spinner, installStr)
-      .then(() => {
-        config.spinner.succeed(['项目依赖安装完成.'])
-        config.spinner.clear()
-        resolve()
-      })
+    cmdSystem([`cd ${config.answers_all.name}`, type_install], config.spinner, installStr).then(() => {
+      config.spinner.succeed(['项目依赖安装完成.'])
+      config.spinner.clear()
+      resolve()
+    })
+  })
+}
+
+// 安装css预处理器
+function installPrecss() {
+  return new Promise(resolve => {
+    let installStr = `正在使用${chalk.greenBright(config.answers_all.package_manager)}安装${chalk.greenBright(config.answers_all.precss + '-loader...')}`
+    config.spinner.start([installStr])
+    let type_install = null;
+    let loaders = '';
+    switch (config.answers_all.precss) {
+      case 'sass':
+        loaders = `sass-loader node-sass`
+        break;
+      case 'less':
+        loaders = `less-loader less`
+        break;
+      default:
+        loaders = `stylus-loader stylus`
+        break;
+    }
+    let extStr = ''
+    switch (config.answers_all.precss) {
+      case 'sass':
+        extStr = 'scss'
+        break;
+      case 'less':
+        extStr = 'less'
+        break;
+      default:
+        extStr = 'styl'
+        break;
+    }
+    let fileUrl = `${process.cwd()}/${config.answers_all.name}/src/style/index.${extStr}`
+    fs.writeFile(fileUrl, '', (err) => {
+      if (err) throw err;
+    });
+    switch (config.answers_all.package_manager) {
+      case 'npm':
+        type_install = `npm install ${loaders} --save-dev`
+        break;
+      case 'cnpm':
+        type_install = `cnpm install ${loaders} --save-dev`
+        break;
+      default:
+        type_install = `yarn add ${loaders} -D`
+        break;
+    }
+    cmdSystem([`cd ${config.answers_all.name}`, type_install], config.spinner, installStr).then(() => {
+      config.spinner.succeed([`${config.answers_all.precss}-loader安装完成.`])
+      config.spinner.clear()
+      resolve()
+    })
   })
 }
 
@@ -190,6 +247,8 @@ async function actions() {
   await reviseFile();
   // 安装项目依赖
   await installDev();
+  // 安装css预处理器
+  await installPrecss();
   // 安装插件
   await installPlugin();
   // 最终提示
