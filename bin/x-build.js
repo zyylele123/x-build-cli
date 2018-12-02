@@ -23,10 +23,11 @@ let config = {
   answers_all: {}
 }
 
+
 config.commander
   .version(package.version)
   .option('-c, create <n>', '初始化x-build项目')
-  .option('-n', '禁止版本检测，可能会导致项目无法正常运行！')
+  .option('-n, noversion', '禁止版本检测，可能会导致项目无法正常运行！')
 
 config.commander
   .parse(process.argv);
@@ -48,6 +49,7 @@ function start() {
       }, (version) => {
         hint.fail(config.spinner, `请将x-build-cli更新到最新版本(v${version})`)
         process.exit();
+        reject();
       })
     }
   })
@@ -58,14 +60,12 @@ function questionList() {
   return new Promise(resolve => {
     if (commander.create) {
       inquirer.prompt([
-        question.port,
-        question.rem,
         question.package_manager,
         question.precss,
+        question.rem,
         question.plugin
       ]).then(function (answers) {
         config.answers_all.name = config.commander.create
-        config.answers_all.port = answers.port
         config.answers_all.rem = answers.rem
         config.answers_all.package_manager = answers.package_manager
         config.answers_all.precss = answers.precss
@@ -145,53 +145,52 @@ function installDev () {
 // 安装css预处理器
 function installPrecss() {
   return new Promise(resolve => {
-    let installStr = `正在使用${chalk.greenBright(config.answers_all.package_manager)}安装${chalk.greenBright(config.answers_all.precss + '-loader...')}`
-    config.spinner.start([installStr])
     let type_install = null;
     let loaders = '';
-    switch (config.answers_all.precss) {
-      case 'sass':
-        loaders = `sass-loader node-sass`
-        break;
-      case 'less':
-        loaders = `less-loader less`
-        break;
-      default:
-        loaders = `stylus-loader stylus`
-        break;
-    }
     let extStr = ''
     switch (config.answers_all.precss) {
       case 'sass':
+        loaders = `sass-loader node-sass`
         extStr = 'scss'
         break;
       case 'less':
+        loaders = `less-loader less`
         extStr = 'less'
         break;
+      case 'stylus':
+        loaders = `stylus-loader stylus`
+        loaders = `styl`
+        break;
       default:
-        extStr = 'styl'
+        extStr = 'css'
         break;
     }
     let fileUrl = `${process.cwd()}/${config.answers_all.name}/src/style/index.${extStr}`
     fs.writeFile(fileUrl, '', (err) => {
       if (err) throw err;
     });
-    switch (config.answers_all.package_manager) {
-      case 'npm':
-        type_install = `npm install ${loaders} --save-dev`
-        break;
-      case 'cnpm':
-        type_install = `cnpm install ${loaders} --save-dev`
-        break;
-      default:
-        type_install = `yarn add ${loaders} -D`
-        break;
-    }
-    cmdSystem([`cd ${config.answers_all.name}`, type_install], config.spinner, installStr).then(() => {
-      config.spinner.succeed([`${config.answers_all.precss}-loader安装完成.`])
-      config.spinner.clear()
+    if (config.answers_all.precss === 'No use') {
       resolve()
-    })
+    } else {
+      let installStr = `正在使用${chalk.greenBright(config.answers_all.package_manager)}安装${chalk.greenBright(config.answers_all.precss + '-loader...')}`
+      config.spinner.start([installStr])
+      switch (config.answers_all.package_manager) {
+        case 'npm':
+          type_install = `npm install ${loaders} --save-dev`
+          break;
+        case 'cnpm':
+          type_install = `cnpm install ${loaders} --save-dev`
+          break;
+        default:
+          type_install = `yarn add ${loaders} -D`
+          break;
+      }
+      cmdSystem([`cd ${config.answers_all.name}`, type_install], config.spinner, installStr).then(() => {
+        config.spinner.succeed([`${config.answers_all.precss}-loader安装完成.`])
+        config.spinner.clear()
+        resolve()
+      })
+    }
   })
 }
 
