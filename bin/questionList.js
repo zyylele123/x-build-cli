@@ -21,11 +21,12 @@ let questionList = cli => {
         if (cli.answers_all.rem === true) {
           cli.answers_all.plugin.push('hotcss')
         }
-        if (cli.answers_all.plugin.indexOf('x-animate') ||
-            cli.answers_all.plugin.indexOf('x-fullpage') 
-        ) {
+        if (cli.answers_all.plugin.includes('x-animate') ||
+            cli.answers_all.plugin.includes('x-fullpage') 
+        ){
           cli.answers_all.plugin.push('animate.css')
         }
+        console.log(cli.answers_all.plugin)
         resolve();
       });
     } else {
