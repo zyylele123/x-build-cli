@@ -26,7 +26,6 @@ let questionList = cli => {
         ){
           cli.answers_all.plugin.push('animate.css')
         }
-        console.log(cli.answers_all.plugin)
         resolve();
       });
     } else {
