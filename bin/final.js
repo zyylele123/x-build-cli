@@ -8,7 +8,7 @@ let final = cli => {
       hint.print('green', `🎉  欢迎使用x-build,请继续完成以下操作:`, 'bottom')
       hint.print('cyan', ` $ cd ${cli.answers_all.name}`)
       hint.print('cyan', ` $ ${cli.answers_all.package_manager === 'yarn' ? 'yarn' : 'npm run'} serve`, 'bottom')
-      hint.print('green', ` [使用手册] https://codexu.github.io/`)
+      hint.print('green', ` [文档] https://codexu.github.io/`)
       process.exit();
       resolve();
     }, 500)

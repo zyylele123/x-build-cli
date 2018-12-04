@@ -22,6 +22,7 @@ cli.commander
   .version(package.version)
   .option('-c, create <n>', '初始化x-build项目')
   .option('-n, noversion', '禁止版本检测，可能会导致项目无法正常运行！')
+  .option('-q, quick', '快速创建一个项目')
 
 cli.commander.parse(process.argv);
 
