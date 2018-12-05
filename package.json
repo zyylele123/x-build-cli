@@ -1,6 +1,6 @@
 {
   "name": "x-build-cli",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -29,5 +29,9 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "semver": "^5.6.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0"
   }
 }

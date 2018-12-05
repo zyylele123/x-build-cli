@@ -5,51 +5,62 @@ async function reviseFile(cli) {
   let url = `${process.cwd()}/${cli.answers_all.name}`;
   await revisePackage(url, cli);
   await reviseConfig(url, cli);
+  if (!cli.answers_all.eslint) await removeEslintrc(url);
 }
 
 function revisePackage(url, cli) {
   return new Promise((resolve, reject) => {
     let _url = url + '/package.json';
     fs.readFile(_url, (err, data) => {
-      if (err) reject();
-      let _data = JSON.parse(data.toString())
-      _data.name = cli.answers_all.name
-      _data.version = '0.0.0'
+      if (err) reject(err);
+      let _data = JSON.parse(data.toString());
+      _data.name = cli.answers_all.name;
+      _data.version = '0.0.0';
       _data = JSON.stringify(_data, null, 4);
-      fs.writeFile(_url, _data, err => err ? reject(): resolve())
-    })
-  })
+      fs.writeFile(_url, _data, error => (error ? reject(error) : resolve()));
+    });
+  });
 }
 
 function reviseConfig(url, cli) {
   return new Promise((resolve, reject) => {
     let _url = url + '/build/config.json';
     fs.readFile(_url, (err, data) => {
-      if (err) reject();
-      let _data = JSON.parse(data.toString())
-      _data.port = cli.answers_all.port
-      _data.isRem = cli.answers_all.rem
-      _data.plugins = _data.plugins.concat(cli.answers_all.plugin)
+      if (err) reject(err);
+      let _data = JSON.parse(data.toString());
+      _data.eslint = cli.answers_all.eslint;
+      _data.isRem = cli.answers_all.rem;
+      _data.plugins = _data.plugins.concat(cli.answers_all.plugin);
       let extStr = '';
       switch (cli.answers_all.precss) {
         case 'Sass':
-          extStr = 'scss'
+          extStr = 'scss';
           break;
         case 'Less':
-          extStr = 'less'
+          extStr = 'less';
           break;
         case 'Stylus':
-          extStr = 'styl'
+          extStr = 'styl';
           break;
         default:
-          extStr = 'css'
+          extStr = 'css';
           break;
       }
       _data.files.push(`./src/style/index.${extStr}`);
       _data = JSON.stringify(_data, null, 4);
-      fs.writeFile(_url, _data, err => err ? reject(): resolve())
+      fs.writeFile(_url, _data, error => (error ? reject(error) : resolve()));
     });
-  })
+  });
 }
 
-exports = module.exports = reviseFile;
+function removeEslintrc(url) {
+  return new Promise(resolve => {
+    let _url = url + '/.eslintrc.js';
+    fs.unlink(_url, (err) => {
+      if (err) throw err;
+      resolve();
+    });
+  });
+}
+
+module.exports = reviseFile;
