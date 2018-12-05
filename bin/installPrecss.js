@@ -20,7 +20,7 @@ let installPrecss = cli => {
         break;
       case 'Stylus':
         loaders = `stylus-loader stylus`
-        loaders = `styl`
+        extStr = `styl`
         break;
       default:
         extStr = 'css'
@@ -30,7 +30,6 @@ let installPrecss = cli => {
     fs.writeFile(_url, '', (err) => {
       if (err) throw err
     });
-
     if (cli.answers_all.precss === 'No use') {
       resolve()
     } else {
