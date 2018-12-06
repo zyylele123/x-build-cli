@@ -6,6 +6,11 @@ async function reviseFile(cli) {
   await revisePackage(url, cli);
   await reviseConfig(url, cli);
   if (!cli.answers_all.eslint) await removeEslintrc(url);
+  if (cli.answers_all.pug) {
+    await removeHtml(url);
+  } else {
+    await removePug(url);
+  }
 }
 
 function revisePackage(url, cli) {
@@ -31,6 +36,9 @@ function reviseConfig(url, cli) {
       _data.eslint = cli.answers_all.eslint;
       _data.isRem = cli.answers_all.rem;
       _data.plugins = _data.plugins.concat(cli.answers_all.plugin);
+      if (cli.answers_all.pug) {
+        _data.template = './index.pug';
+      }
       let extStr = '';
       switch (cli.answers_all.precss) {
         case 'Sass':
@@ -56,6 +64,31 @@ function reviseConfig(url, cli) {
 function removeEslintrc(url) {
   return new Promise(resolve => {
     let _url = url + '/.eslintrc.js';
+    fs.unlink(_url, (err) => {
+      if (err) throw err;
+      resolve();
+    });
+  });
+}
+
+function removePug(url) {
+  return new Promise(resolve => {
+    let _url1 = url + '/index.pug';
+    let _url2 = url + '/src/app.pug';
+    fs.unlink(_url1, (err) => {
+      if (err) throw err;
+      resolve();
+    });
+    fs.unlink(_url2, (err) => {
+      if (err) throw err;
+      resolve();
+    });
+  });
+}
+
+function removeHtml(url) {
+  return new Promise(resolve => {
+    let _url = url + '/src/index.html';
     fs.unlink(_url, (err) => {
       if (err) throw err;
       resolve();

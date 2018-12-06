@@ -9,6 +9,7 @@ const questionList = require('./questionList');
 const downloadTemp = require('./downloadTemp');
 const installDev = require('./installDev');
 const installEslint = require('./installEslint');
+const installtemp = require('./installtemp');
 const installPrecss = require('./installPrecss');
 const installPlugin = require('./installPlugin');
 const reviseFile = require('./reviseFile');
@@ -39,6 +40,8 @@ async function actions() {
   await reviseFile(cli);
   // 安装项目依赖
   await installDev(cli);
+  // 安装模板引擎
+  await installtemp(cli);
   // 安装ESLint
   await installEslint(cli);
   // 安装css预处理器

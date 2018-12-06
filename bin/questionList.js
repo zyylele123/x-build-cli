@@ -13,6 +13,7 @@ let questionList = cli => {
       if (cli.commander.quick) {
         cli.answers_all.eslint = false;
         cli.answers_all.rem = false;
+        cli.answers_all.pug = false;
         cli.answers_all.precss = 'No';
         cli.answers_all.plugin = [];
         resolve();
@@ -21,11 +22,13 @@ let questionList = cli => {
       inquirer.prompt([
         question.eslint,
         question.rem,
+        question.pug,
         question.precss,
         question.plugin
       ]).then(function (answers) {
         cli.answers_all.eslint = answers.eslint;
         cli.answers_all.rem = answers.rem;
+        cli.answers_all.pug = answers.pug;
         cli.answers_all.precss = answers.precss;
         cli.answers_all.plugin = answers.plugin;
         if (cli.answers_all.rem === true) {

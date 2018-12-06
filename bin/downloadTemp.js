@@ -6,7 +6,7 @@ const hint = require('../lib/hint');
 let downloadTemp = cli => {
   return new Promise(resolve => {
     cli.spinner.start('正在下载最新模板文件...');
-    download('codexu/x-build#dev', cli.answers_all.name, function (err) {
+    download('codexu/x-build', cli.answers_all.name, function (err) {
       if (!err) {
         cli.spinner.succeed(['模板文件下载完成.']);
         cli.spinner.clear();
