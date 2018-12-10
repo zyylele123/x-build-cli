@@ -27,9 +27,16 @@ let questionList = cli => {
         question.plugin
       ]).then(function (answers) {
         cli.answers_all.eslint = answers.eslint;
+        if (cli.answers_all.eslint) cli.progress++;
+
         cli.answers_all.rem = answers.rem;
+
         cli.answers_all.pug = answers.pug;
+        if (cli.answers_all.pug) cli.progress++;
+        
         cli.answers_all.precss = answers.precss;
+        if (cli.answers_all.precss !== 'No') cli.progress++;
+        
         cli.answers_all.plugin = answers.plugin;
         if (cli.answers_all.rem === true) {
           cli.answers_all.plugin.push('hotcss');
@@ -39,6 +46,7 @@ let questionList = cli => {
         ){
           cli.answers_all.plugin.push('animate.css');
         }
+        if (cli.answers_all.plugin.length > 0) cli.progress++;
         hint.line();
         resolve();
       });

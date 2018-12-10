@@ -8,7 +8,8 @@ let installPlugin = cli => {
     if (cli.answers_all.plugin.length === 0) {
       resolve();
     } else {
-      let installStr = `正在使用${chalk.greenBright(cli.answers_all.package_manager)}安装插件...`;
+      cli.progressCurrent++;
+      let installStr = `[${cli.progressCurrent}/${cli.progress}] 正在使用${chalk.greenBright(cli.answers_all.package_manager)}安装插件...`;
       cli.spinner.start([installStr]);
       let plugin = cli.answers_all.plugin.join(' ');
       let type_install = null;
@@ -24,8 +25,6 @@ let installPlugin = cli => {
           break;
       }
       cmdSystem([`cd ${cli.answers_all.name}`, type_install]).then(() => {
-        cli.spinner.succeed(['插件安装完成.']);
-        cli.spinner.clear();
         resolve();
       });
     }

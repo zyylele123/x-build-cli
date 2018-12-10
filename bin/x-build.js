@@ -18,6 +18,9 @@ const final = require('./final');
 let cli = {
   commander,
   spinner: new Ora(),
+  // 基础进度2: 模板和依赖
+  progress: 2,
+  progressCurrent: 0,
   answers_all: {}
 };
 

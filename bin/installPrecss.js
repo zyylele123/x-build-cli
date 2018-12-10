@@ -33,7 +33,8 @@ let installPrecss = cli => {
     if (cli.answers_all.precss === 'No') {
       resolve();
     } else {
-      let installStr = `正在使用${chalk.greenBright(cli.answers_all.package_manager)}安装${chalk.greenBright(cli.answers_all.precss + '-loader...')}`;
+      cli.progressCurrent++;
+      let installStr = `[${cli.progressCurrent}/${cli.progress}] 正在使用${chalk.greenBright(cli.answers_all.package_manager)}安装${chalk.greenBright(cli.answers_all.precss + '...')}`;
       cli.spinner.start([installStr]);
       switch (cli.answers_all.package_manager) {
         case 'npm':
@@ -47,8 +48,6 @@ let installPrecss = cli => {
           break;
       }
       cmdSystem([`cd ${cli.answers_all.name}`, type_install]).then(() => {
-        cli.spinner.succeed([`${cli.answers_all.precss}安装完成.`]);
-        cli.spinner.clear();
         resolve();
       });
     }
