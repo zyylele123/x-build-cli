@@ -1,6 +1,6 @@
 {
   "name": "x-build-cli",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "description": "X-BUILD-CLI是一个快速生成X-BUILD项目的生成器，类似于@vue/cli。",
   "main": "index.js",
   "keywords": [
