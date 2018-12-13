@@ -1,22 +1,20 @@
 const download = require('download-git-repo');
-
-const hint = require('../lib/hint');
+const msg = require('../lib/msg');
 
 // 下载模板文件
-let downloadTemp = cli => {
+function downloadTemp() {
   return new Promise(resolve => {
-    cli.progressCurrent++;
-    cli.spinner.start(`[${cli.progressCurrent}/${cli.progress}] 正在下载最新模板文件...`);
-    download('codexu/x-build', cli.answers_all.name, function (err) {
+    this.progressCurrent++;
+    this.spinner.start(`[${this.progressCurrent}/${this.progress}] 正在下载最新模板文件...`);
+    download(this.git, this.name, err => {
       if (!err) {
-        // cli.spinner.succeed(['模板文件下载完成.']);
-        // cli.spinner.clear();
         resolve();
       } else {
-        hint.fail(cli.spinner, '模板下载失败！请检查网络链接状况', err);
+        msg.fail(this.spinner, '模板下载失败！请检查网络链接状况或查看错误信息', err);
+        process.exit();
       }
     });
   });
-};
+}
 
 module.exports = downloadTemp;

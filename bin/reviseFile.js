@@ -1,25 +1,27 @@
 const fs = require('fs');
 
 // 修改文件
-async function reviseFile(cli) {
-  let url = `${process.cwd()}/${cli.answers_all.name}`;
-  await revisePackage(url, cli);
-  await reviseConfig(url, cli);
-  if (!cli.answers_all.eslint) await removeEslintrc(url);
-  if (cli.answers_all.pug) {
+async function reviseFile() {
+  let url = `${process.cwd()}/${this.name}`;
+  await revisePackage.call(this, url);
+  await reviseConfig.call(this, url);
+  await addCss.call(this, url);
+  if (!this.answers.eslint) await removeEslintrc(url);
+  if (this.answers.pug) {
     await removeHtml(url);
   } else {
     await removePug(url);
   }
 }
 
-function revisePackage(url, cli) {
+// 修改 package.json
+function revisePackage(url) {
   return new Promise((resolve, reject) => {
     let _url = url + '/package.json';
     fs.readFile(_url, (err, data) => {
       if (err) reject(err);
       let _data = JSON.parse(data.toString());
-      _data.name = cli.answers_all.name;
+      _data.name = this.name;
       _data.version = '0.0.0';
       _data = JSON.stringify(_data, null, 4);
       fs.writeFile(_url, _data, error => (error ? reject(error) : resolve()));
@@ -27,40 +29,37 @@ function revisePackage(url, cli) {
   });
 }
 
-function reviseConfig(url, cli) {
+// 修改 build/config.json
+function reviseConfig(url) {
   return new Promise((resolve, reject) => {
     let _url = url + '/build/config.json';
     fs.readFile(_url, (err, data) => {
       if (err) reject(err);
       let _data = JSON.parse(data.toString());
-      _data.eslint = cli.answers_all.eslint;
-      _data.isRem = cli.answers_all.rem;
-      _data.plugins = _data.plugins.concat(cli.answers_all.plugin);
-      if (cli.answers_all.pug) {
+      _data.eslint = this.answers.eslint;
+      _data.isRem = this.answers.rem;
+      _data.plugins = _data.plugins.concat(this.answers.plugin);
+      if (this.answers.pug) {
         _data.template = './index.pug';
       }
-      let extStr = '';
-      switch (cli.answers_all.precss) {
-        case 'Sass':
-          extStr = 'scss';
-          break;
-        case 'Less':
-          extStr = 'less';
-          break;
-        case 'Stylus':
-          extStr = 'styl';
-          break;
-        default:
-          extStr = 'css';
-          break;
-      }
-      _data.files.push(`./src/style/index.${extStr}`);
+      _data.files.push(`./src/style/index.${this.cssExt}`);
       _data = JSON.stringify(_data, null, 4);
       fs.writeFile(_url, _data, error => (error ? reject(error) : resolve()));
     });
   });
 }
 
+function addCss(url) {
+  return new Promise(resolve => {
+    let _url = `${url}/src/style/index.${this.cssExt}`;
+    fs.writeFile(_url, '', (err) => {
+      if (err) throw err;
+      resolve();
+    });
+  });
+}
+
+// 删除 eslint配置文件
 function removeEslintrc(url) {
   return new Promise(resolve => {
     let _url = url + '/.eslintrc.js';
@@ -71,6 +70,7 @@ function removeEslintrc(url) {
   });
 }
 
+// 删除PUG模板文件
 function removePug(url) {
   return new Promise(resolve => {
     let _url1 = url + '/index.pug';
@@ -86,6 +86,7 @@ function removePug(url) {
   });
 }
 
+// 删除HTML入口文件
 function removeHtml(url) {
   return new Promise(resolve => {
     let _url = url + '/src/index.html';

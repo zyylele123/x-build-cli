@@ -7,53 +7,54 @@ const pkg = require('../package.json');
 const start = require('./start');
 const questionList = require('./questionList');
 const downloadTemp = require('./downloadTemp');
-const installDev = require('./installDev');
-const installEslint = require('./installEslint');
-const installtemp = require('./installtemp');
-const installPrecss = require('./installPrecss');
-const installPlugin = require('./installPlugin');
 const reviseFile = require('./reviseFile');
+const install = require('../lib/install');
 const final = require('./final');
 
-let cli = {
-  commander,
-  spinner: new Ora(),
-  // 基础进度2: 模板和依赖
-  progress: 2,
-  progressCurrent: 0,
-  answers_all: {}
-};
+// 默认git仓库模板
+this.git = 'codexu/x-build';
+// 命令行
+this.commander = commander;
+// 安装进度提示工具
+this.spinner = new Ora();
+// 安装进度 默认2 github模板、devDependencies
+this.progress = 2;
+// 当前进去 默认0 从拉取模板开始增加
+this.progressCurrent = 0;
+// 全部选项答案
+this.answers = {};
+this.installBaseType = '';
+this.installType = '';
+this.installDevType = '';
+// 依赖
+this.dependencies = [];
+this.devDependencies = [];
+this.cssExt = '';
 
-cli.commander
+// 初始化指令
+this.commander
   .version(pkg.version)
   .option('-c, create <n>', '初始化x-build项目')
   .option('-n, noversion', '禁止版本检测，可能会导致项目无法正常运行！')
-  .option('-q, quick', '快速创建一个项目');
+  .option('-q, quick', '快速创建一个项目')
+  .parse(process.argv);
 
-cli.commander.parse(process.argv);
-
-async function actions() {
+// 完整安装流程
+(async function actions() {
   // 清空控制台，查询CLI版本
-  await start(cli);
+  await start.call(this);
   // 输入问题列表
-  await questionList(cli);
+  await questionList.call(this);
   // 下载模板文件
-  await downloadTemp(cli);
+  await downloadTemp.call(this);
   // 修改JSON
-  await reviseFile(cli);
+  await reviseFile.call(this);
   // 安装项目依赖
-  await installDev(cli);
-  // 安装模板引擎
-  await installtemp(cli);
-  // 安装ESLint
-  await installEslint(cli);
-  // 安装css预处理器
-  await installPrecss(cli);
-  // 安装插件
-  await installPlugin(cli);
-  // 最终提示
-  await final(cli);
-}
-
-actions();
-  
+  await install.call(this, this.installBaseType, null);
+  // 安装 dependencies
+  await install.call(this, this.installType, this.dependencies);
+  // 安装 devDependencies
+  await install.call(this, this.installDevType, this.devDependencies);
+  // 初始化git和输出继续操作提示
+  final.call(this);
+}).call(this);
